@@ -28,14 +28,41 @@ fun! s:assign_buffers_to_tabs()
   tabc
 endf
 
+fun! s:changed_files() abort
+  return s:git_exec('diff', '--name-only origin/HEAD...HEAD')
+endf
+
+fun! s:modified_files() abort
+  return map(filter(s:git_exec('status', '--short'), 'v:val =~ "^ M"'), 'matchstr(v:val, "^ M \\zs\\(.*\\)\\ze", 0)')
+endf
+
 fun! add_git_managed_file_to_buffer#add_changed_files_to_buffer(bang) abort
   try
     if a:bang
       call s:delete_all_buffers()
     endif
 
-    for changed_file in s:git_exec('diff', '--name-only origin/HEAD...HEAD')
+    for changed_file in s:changed_files()
       exec 'silent badd '.changed_file
+    endfor
+
+    if a:bang
+      call s:assign_buffers_to_tabs()
+    endif
+  catch /failed to diff/
+    redraw!
+    echo 'file extraction failed.'
+  endtry
+endf
+
+fun! add_git_managed_file_to_buffer#add_modified_files_to_buffer(bang) abort
+  try
+    if a:bang
+      call s:delete_all_buffers()
+    endif
+
+    for modified_file in s:modified_files()
+      exec 'silent badd '.modified_file
     endfor
 
     if a:bang
