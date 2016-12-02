@@ -22,7 +22,7 @@ fun! s:delete_all_buffers() abort
   endfor
 endf
 
-fun! s:assign_buffers_to_tabs()
+fun! s:assign_buffers_to_tabs() abort
   exec 'tab ball'
   tabfirst
   tabc
@@ -34,6 +34,10 @@ endf
 
 fun! s:modified_files() abort
   return map(filter(s:git_exec('status', '--short'), 'v:val =~ "^ M"'), 'matchstr(v:val, "^ M \\zs\\(.*\\)\\ze", 0)')
+endf
+
+fun! s:untracked_files() abort
+  return map(filter(s:git_exec('status', '--short'), 'v:val =~ "^??"'), 'matchstr(v:val, "^?? \\zs\\(.*\\)\\ze", 0)')
 endf
 
 fun! add_git_managed_file_to_buffer#add_changed_files_to_buffer(bang) abort
@@ -63,6 +67,25 @@ fun! add_git_managed_file_to_buffer#add_modified_files_to_buffer(bang) abort
 
     for modified_file in s:modified_files()
       exec 'silent badd '.modified_file
+    endfor
+
+    if a:bang
+      call s:assign_buffers_to_tabs()
+    endif
+  catch /failed to diff/
+    redraw!
+    echo 'file extraction failed.'
+  endtry
+endf
+
+fun! add_git_managed_file_to_buffer#add_untracked_files_to_buffer(bang) abort
+  try
+    if a:bang
+      call s:delete_all_buffers()
+    endif
+
+    for untracked_file in s:untracked_files()
+      exec 'silent badd '.untracked_file
     endfor
 
     if a:bang
