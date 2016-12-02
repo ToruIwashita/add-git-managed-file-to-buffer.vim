@@ -12,6 +12,7 @@ set cpo&vim
 
 command! -bang AddCToBuffer call add_git_managed_file_to_buffer#add_changed_files_to_buffer(<bang>0)
 command! -bang AddMToBuffer call add_git_managed_file_to_buffer#add_modified_files_to_buffer(<bang>0)
+command! -bang AddUToBuffer call add_git_managed_file_to_buffer#add_untracked_files_to_buffer(<bang>0)
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
