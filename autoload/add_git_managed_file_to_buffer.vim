@@ -16,6 +16,25 @@ fun! s:git_exec(cmd, args) abort
   return results
 endf
 
+fun! s:add_any_files_to_buffer(bang, extract_file_funcref) abort
+  try
+    if a:bang
+      call s:delete_all_buffers()
+    endif
+
+    for maneged_file in a:extract_file_funcref()
+      exec 'silent badd '.maneged_file
+    endfor
+
+    if a:bang
+      call s:assign_buffers_to_tabs()
+    endif
+  catch /failed to diff/
+    redraw!
+    echo 'file extraction failed.'
+  endtry
+endf
+
 fun! s:delete_all_buffers() abort
   for buf_num in filter(range(1, bufnr('$')), 'buflisted(v:val)')
     exec 'silent bdelete' buf_num
@@ -41,60 +60,15 @@ fun! s:untracked_files() abort
 endf
 
 fun! add_git_managed_file_to_buffer#add_changed_files_to_buffer(bang) abort
-  try
-    if a:bang
-      call s:delete_all_buffers()
-    endif
-
-    for changed_file in s:changed_files()
-      exec 'silent badd '.changed_file
-    endfor
-
-    if a:bang
-      call s:assign_buffers_to_tabs()
-    endif
-  catch /failed to diff/
-    redraw!
-    echo 'file extraction failed.'
-  endtry
+  call s:add_any_files_to_buffer(a:bang, funcref('s:changed_files'))
 endf
 
 fun! add_git_managed_file_to_buffer#add_modified_files_to_buffer(bang) abort
-  try
-    if a:bang
-      call s:delete_all_buffers()
-    endif
-
-    for modified_file in s:modified_files()
-      exec 'silent badd '.modified_file
-    endfor
-
-    if a:bang
-      call s:assign_buffers_to_tabs()
-    endif
-  catch /failed to diff/
-    redraw!
-    echo 'file extraction failed.'
-  endtry
+  call s:add_any_files_to_buffer(a:bang, funcref('s:modified_files'))
 endf
 
 fun! add_git_managed_file_to_buffer#add_untracked_files_to_buffer(bang) abort
-  try
-    if a:bang
-      call s:delete_all_buffers()
-    endif
-
-    for untracked_file in s:untracked_files()
-      exec 'silent badd '.untracked_file
-    endfor
-
-    if a:bang
-      call s:assign_buffers_to_tabs()
-    endif
-  catch /failed to diff/
-    redraw!
-    echo 'file extraction failed.'
-  endtry
+  call s:add_any_files_to_buffer(a:bang, funcref('s:untracked_files'))
 endf
 
 let &cpo = s:cpo_save
