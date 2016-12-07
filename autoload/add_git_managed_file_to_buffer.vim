@@ -16,19 +16,26 @@ fun! s:git_exec(cmd, args) abort
   return results
 endf
 
-fun! s:add_any_files_to_buffer(bang, extract_file_funcref) abort
+fun! s:add_any_files_to_buffer(extract_file_funcref) abort
   try
-    if a:bang
-      call s:delete_all_buffers()
-    endif
+    for maneged_file in a:extract_file_funcref()
+      exec 'silent badd '.maneged_file
+    endfor
+  catch /failed to diff/
+    redraw!
+    echo 'file extraction failed.'
+  endtry
+endf
+
+fun! s:add_any_files_to_tab(extract_file_funcref) abort
+  try
+    call s:delete_all_buffers()
 
     for maneged_file in a:extract_file_funcref()
       exec 'silent badd '.maneged_file
     endfor
 
-    if a:bang
-      call s:assign_buffers_to_tabs()
-    endif
+    call s:assign_buffers_to_tabs()
   catch /failed to diff/
     redraw!
     echo 'file extraction failed.'
@@ -59,16 +66,28 @@ fun! s:untracked_files() abort
   return map(filter(s:git_exec('status', '--short'), 'v:val =~ "^??"'), 'matchstr(v:val, "^?? \\zs\\(.*\\)\\ze", 0)')
 endf
 
-fun! add_git_managed_file_to_buffer#add_changed_files_to_buffer(bang) abort
-  call s:add_any_files_to_buffer(a:bang, funcref('s:changed_files'))
+fun! add_git_managed_file_to_buffer#add_changed_files_to_buffer() abort
+  call s:add_any_files_to_buffer(funcref('s:changed_files'))
 endf
 
-fun! add_git_managed_file_to_buffer#add_modified_files_to_buffer(bang) abort
-  call s:add_any_files_to_buffer(a:bang, funcref('s:modified_files'))
+fun! add_git_managed_file_to_buffer#add_modified_files_to_buffer() abort
+  call s:add_any_files_to_buffer(funcref('s:modified_files'))
 endf
 
-fun! add_git_managed_file_to_buffer#add_untracked_files_to_buffer(bang) abort
-  call s:add_any_files_to_buffer(a:bang, funcref('s:untracked_files'))
+fun! add_git_managed_file_to_buffer#add_untracked_files_to_buffer() abort
+  call s:add_any_files_to_buffer(funcref('s:untracked_files'))
+endf
+
+fun! add_git_managed_file_to_buffer#add_changed_files_to_tab() abort
+  call s:add_any_files_to_tab(funcref('s:changed_files'))
+endf
+
+fun! add_git_managed_file_to_buffer#add_modified_files_to_tab() abort
+  call s:add_any_files_to_tab(funcref('s:modified_files'))
+endf
+
+fun! add_git_managed_file_to_buffer#add_untracked_files_to_tab() abort
+  call s:add_any_files_to_tab(funcref('s:untracked_files'))
 endf
 
 let &cpo = s:cpo_save
