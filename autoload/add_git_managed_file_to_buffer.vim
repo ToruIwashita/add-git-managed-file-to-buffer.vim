@@ -49,7 +49,10 @@ fun! s:delete_all_buffers() abort
 endf
 
 fun! s:assign_buffers_to_tabs() abort
+  let s:current_tpm = &tabpagemax
+  set tabpagemax=100
   exec 'tab ball'
+  let &tabpagemax = s:current_tpm
   tabfirst
   tabc
 endf
