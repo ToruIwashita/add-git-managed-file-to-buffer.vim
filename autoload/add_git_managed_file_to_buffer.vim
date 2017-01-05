@@ -93,8 +93,9 @@ fun! add_git_managed_file_to_buffer#add_untracked_files_to_tab() abort
   call s:add_any_files_to_tab(funcref('s:untracked_files'))
 endf
 
-fun! add_git_managed_file_to_buffer#open_buffer_in_tab()
-  exec 'tab ball'
+fun! add_git_managed_file_to_buffer#open_all_buffers_in_tab()
+  call s:delete_all_buffers()
+  call s:assign_buffers_to_tabs()
 endf
 
 let &cpo = s:cpo_save

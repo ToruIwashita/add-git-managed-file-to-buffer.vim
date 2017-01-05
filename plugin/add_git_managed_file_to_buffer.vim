@@ -21,7 +21,7 @@ command! AddMToTab call add_git_managed_file_to_buffer#add_modified_files_to_tab
 command! AddUToTab call add_git_managed_file_to_buffer#add_untracked_files_to_tab()
 
 " open all buffers in a new tab
-command! OpenBufferInTab call add_git_managed_file_to_buffer#open_buffer_in_tab()
+command! OpenAllBuffersInTab call add_git_managed_file_to_buffer#open_all_buffers_in_tab()
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
