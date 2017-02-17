@@ -49,12 +49,16 @@ fun! s:delete_all_buffers() abort
 endf
 
 fun! s:assign_buffers_to_tabs() abort
+  call s:tab_all()
+  tabfirst
+  tabc
+endf
+
+fun! s:tab_all() abort
   let s:current_tpm = &tabpagemax
   set tabpagemax=100
   exec 'tab ball'
   let &tabpagemax = s:current_tpm
-  tabfirst
-  tabc
 endf
 
 fun! s:changed_files() abort
@@ -94,7 +98,7 @@ fun! add_git_managed_file_to_buffer#add_untracked_files_to_tab() abort
 endf
 
 fun! add_git_managed_file_to_buffer#open_all_buffers_in_tab()
-  exec 'tab ball'
+  call s:tab_all()
 endf
 
 let &cpo = s:cpo_save
