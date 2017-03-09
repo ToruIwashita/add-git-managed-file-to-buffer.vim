@@ -36,22 +36,24 @@ fun! s:add_any_files_to_tab(extract_file_funcref) abort
     endfor
 
     call s:assign_buffers_to_tabs()
+  catch /Cannot close last tab page/
+    redraw!
   catch /failed to diff/
     redraw!
     echo 'file extraction failed.'
   endtry
 endf
 
-fun! s:delete_all_buffers() abort
-  for buf_num in filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    exec 'silent bdelete' buf_num
-  endfor
-endf
-
 fun! s:assign_buffers_to_tabs() abort
   call s:tab_all()
   tabfirst
   tabc
+endf
+
+fun! s:delete_all_buffers() abort
+  for buf_num in filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    exec 'silent bdelete' buf_num
+  endfor
 endf
 
 fun! s:tab_all() abort
