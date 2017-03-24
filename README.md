@@ -23,15 +23,15 @@ Add all untracked files to the buffer.
 
 ##### - `AddCToTab`  
 
-After clearing the buffer, add the changed files to the buffer and open them in tabs.  
+After clearing the buffer, add the changed files to the buffer and open them in tab.  
 
 ##### - `AddMToTab`  
 
-After clearing the buffer, add the modifiled files to the buffer and open them in tabs.  
+After clearing the buffer, add the modifiled files to the buffer and open them in tab.  
 
 ##### - `AddUToTab`  
 
-After clearing the buffer, add the untracked files to the buffer and open them in tabs.  
+After clearing the buffer, add the untracked files to the buffer and open them in tab.  
 
 ##### - `OpenAllBuffersWithTabs`  
 
