@@ -41,18 +41,18 @@ Commands
 
 								*:AddCToTab*
 :AddCToTab
-	After emptying the buffer, add the changed file to the buffer and open
-	it in the tab.
+	After clearing the buffer, add the changed files to the buffer and
+	open them in tabs.  
 
 								*:AddMToTab*
 :AddMToTab
-	After emptying the buffer, add the modifiled file to the buffer and
-	open it in the tab.
+	After clearing the buffer, add the modifiled files to the buffer and
+	open them in tabs.  
 
 								*:AddUToTab*
 :AddUToTab
-	After emptying the buffer, add the untracked file to the buffer and
-	open it in the tab.
+	After clearing the buffer, add the untracked files to the buffer and
+	open them in tabs.  
 
 							*:OpenAllBuffersInTab*
 :OpenAllBuffersInTab
