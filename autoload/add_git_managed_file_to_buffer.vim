@@ -63,8 +63,12 @@ fun! s:tab_all() abort
   let &tabpagemax = s:current_tpm
 endf
 
+fun! s:toplevel_dir_path() abort
+  return s:git_exec('rev-parse', '--show-toplevel')[0].'/'
+endf
+
 fun! s:changed_files() abort
-  return s:git_exec('diff', '--name-only origin/HEAD...HEAD')
+  return map(s:git_exec('diff', '--name-only origin/HEAD...HEAD'), 's:toplevel_dir_path().v:val')
 endf
 
 fun! s:modified_files() abort
