@@ -7,8 +7,8 @@ if exists('g:loaded_add_git_managed_file_to_buffer')
 endif
 let g:loaded_add_git_managed_file_to_buffer = 1
 
-let s:cpo_save = &cpo
-set cpo&vim
+let s:cpoptions_save = &cpoptions
+set cpoptions&vim
 
 " buffer
 command! AddCToBuffer call add_git_managed_file_to_buffer#add_changed_files_to_buffer()
@@ -23,5 +23,5 @@ command! AddUToTab call add_git_managed_file_to_buffer#add_untracked_files_to_ta
 " open all buffers in a new tab
 command! OpenAllBuffersInTab call add_git_managed_file_to_buffer#open_all_buffers_in_tab()
 
-let &cpo = s:cpo_save
-unlet s:cpo_save
+let &cpoptions = s:cpoptions_save
+unlet s:cpoptions_save
